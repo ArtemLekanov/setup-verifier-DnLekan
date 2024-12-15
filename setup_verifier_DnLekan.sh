@@ -15,12 +15,23 @@ sudo apt install -y docker-ce
 sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-# Создание директории проекта
-mkdir ~/my_project
+# Проверка установки Docker Compose
+docker-compose --version
+
+# Создание директории проекта, если не существует
+if [ ! -d "~/my_project" ]; then
+    mkdir ~/my_project
+fi
 cd ~/my_project
 
 # Запрос адреса кошелька у пользователя
 read -p "Введите ваш адрес кошелька: " wallet_address
+
+# Проверка, что адрес кошелька не пустой
+if [ -z "$wallet_address" ]; then
+    echo "Адрес кошелька не может быть пустым!"
+    exit 1
+fi
 
 # Создание файла docker-compose.yml
 cat <<EOL > docker-compose.yml
@@ -44,4 +55,3 @@ echo "Установка завершена. Подождите 2 минуты, 
 echo "cd ~/my_project"
 echo "docker-compose restart"
 echo "docker-compose logs -f"
-```
